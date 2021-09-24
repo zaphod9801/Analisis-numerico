@@ -1,4 +1,4 @@
-from math import pow, sqrt, log, log10, log2, sin, cos, tan, sinh, cosh, tanh, e
+from math import pow, sqrt, log, log10, log2, sin, cos, tan, sinh, cosh, tanh, e, pi, factorial, acos, asin, atan, asinh, acosh, atanh, tau
 
 class Evaluador():
     
