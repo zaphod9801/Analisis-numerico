@@ -2,7 +2,7 @@ from math import pow, sqrt, log, log10, log2, sin, cos, tan, sinh, cosh, tanh, e
 
 class Evaluador():
     
-    def Evaluar(funcion: str, x: int) -> int:
+    def Evaluar(funcion: str, x: float) -> float:
         verificador = 0
         
         try: 
