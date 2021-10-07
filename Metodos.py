@@ -30,11 +30,10 @@ class Metodos:
                 
                 fact = x3
                 
-        a = xant
-        b = xact
-        iter = i
+
         
-        return a, b, iter
+        respuesta = "|| Extremo izquierdo: "+str(xant)+" || Extremo derecho: "+str(xact)+" || Iteraciones: "+str(i+1)+" ||"
+        return respuesta
                 
     
     def Biseccion(funcion: str, a: int, b: int, tol: int, Nmax : int):
@@ -55,8 +54,9 @@ class Metodos:
             fpm = Evaluador.Evaluar(funcion, pm)
             E = abs(pm - p0)
             i = i + 1
-            
-        return pm, i+1, E
+        
+        respuesta = "|| Solución: "+str(pm)+" || Número de iteraciones: "+str(i+1)+" || Error: "+str(E)+" ||"    
+        return respuesta
 
     
     def ReglaFalsa(funcion: str, a: int, b: int, tol: int, Nmax: int):
@@ -84,7 +84,8 @@ class Metodos:
             
             i = i+1
             
-        return pm, i, E
+        respuesta = "|| Solución: "+str(pm)+" || Número de iteraciones: "+str(i+1)+" || Error: "+str(E)+" ||"     
+        return respuesta
     
     
     def PuntoFijo(funcion: str, g: str, x0: int, tol: int, Nmax: int):
@@ -97,15 +98,15 @@ class Metodos:
             E = abs(xact- xant)
             i = i+1
             xant = xact
-            
-        return xact, i, E
+        
+        respuesta = "|| Solución: "+str(xact)+" || Número de iteraciones: "+str(i+1)+" || Error: "+str(E)+" ||"     
+        return respuesta
         
     def Newton(funcion: str, funcionD: str, x0: int, tol: int, Nmax: int):
         xant = x0
         fant = Evaluador.Evaluar(funcion, xant)
         E = 1000
         i = 0
-        
         while (E>tol and i<Nmax):
             xact = xant - fant/(Evaluador.Evaluar(funcionD, xant))
             fact = Evaluador.Evaluar(funcion,xact)
@@ -114,7 +115,8 @@ class Metodos:
             xant = xact
             fant = fact
             
-        return xact, i, E
+        respuesta = "|| Solución: "+str(xact)+" || Número de iteraciones: "+str(i+1)+" || Error: "+str(E)+" ||"     
+        return respuesta
     
     def Secante(funcion: str, x0: int, x1: int, tol: int, Nmax: int):
         f0 = Evaluador.Evaluar(funcion,x0)
@@ -132,8 +134,8 @@ class Metodos:
             x1 = xact
             f1 = fact
             
-            
-        return xact, i, E
+        respuesta = "|| Solución: "+str(xact)+" || Número de iteraciones: "+str(i+1)+" || Error: "+str(E)+" ||"     
+        return respuesta
         
     def RaicesMLT(funcion: str, funcionD: str, funcion2D: str, x0: int, tol: int, Nmax: int):
         xant = x0
@@ -150,11 +152,45 @@ class Metodos:
             i = i + 1
             xant = xact
             fant = fact
-            
-        return xact, i, E
+        respuesta = "|| Solución: "+str(xact)+" || Número de iteraciones: "+str(i+1)+" || Error: "+str(E)+" ||"   
+        return respuesta
              
              
 if __name__ == '__main__':
+    
+    print("-"*30+"Secante: "+"-"*30)
     print(Metodos.Secante("x**2 + 3*x - 1",0.5,2,200,200))
+    print("-"*70)
+    print("")
+    
+    print("-"*29+"Biseccion: "+"-"*29)
+    print(Metodos.Biseccion("x**2 + 3*x - 1",0.5,2,200,200))
+    print("-"*70)
+    print("")
+    
+    print("-"*23+"Busqueda Incremental: "+"-"*24)
+    print(Metodos.BusquedaIncremental("x**2 + 3*x - 1",0.5,0.5,200))
+    print("-"*70)
+    print("")
+    
+    print("-"*31+"Newton: "+"-"*31)
+    print(Metodos.Newton("x**2 + 3*x - 1","2*x+3",0.5,200,200))
+    print("-"*70)
+    print("")
+    
+    print("-"*28+"Punto Fijo: "+"-"*29)
+    print(Metodos.PuntoFijo("x**2 + 3*x - 1","2*x+3",0.5,200,200))
+    print("-"*70)
+    print("")
+    
+    print("-"*28+"Raices MLT: "+"-"*29)
+    print(Metodos.RaicesMLT("x**2 + 3*x - 1","2*x+3","2",0.5,200,200))
+    print("-"*70)
+    print("")
+    
+    print("-"*28+"Regla Falsa: "+"-"*28)
+    print(Metodos.ReglaFalsa("x**2 + 3*x - 1",0.5,2,200,200))
+    print("-"*70)
+    print("")
         
         
