@@ -139,9 +139,29 @@ class CLI:
                 - El punto inicial es un entero o un decimal
                 - La toleracia es un entero o un decimal
                 - Las iteraciones maximas son un entero"""
+        
+        elif(metodo==8):
+            try:
+                print("-"*28+"Eliminación Gaussiana Simple: "+"-"*29)
+                x: int = int(input("Número de filas de la matriz?"))
+                y: int = int(input("Número de columnas de la matriz?"))
+                if(x != y): 
+                    resultado = """Weon, la reducción gaussiana simple solo sirve con matrices cuadradas"""
+                else:
+                    matrix: list = []
+                    for a in range(x):
+                        matrix.append([])
+                        for b in range(y):
+                            matrix[a].append(float(input("Valor de la posición [" + str(a) + "," + str(b) + "]")))
+                    terminos_ind: list = []
+                    for a in range(x):
+                        terminos_ind.append(float(input("Valor del termino independiente " + str(a))))
+                    resultado = Metodos.gaussiana_simple(matrix, terminos_ind)
+            except ValueError:
+                resultado = """Weon, algo de lo que introdujiste estaba mal."""
             
         else:
-            resultado = "Opción no valida, recuerda que la opción debe ser un número del 1 al 7"
+            resultado = "Opción no valida, recuerda que la opción debe ser un número del 1 al 8"
             
         
         return resultado
@@ -158,6 +178,7 @@ class CLI:
               - 5: Newton
               - 6: Secante
               - 7: Raices multiples
+              - 8: Eliminación Gaussiana Simple
               """)
         try: 
             print(CLI.EjecutarMetodo(int(m)))

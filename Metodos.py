@@ -175,7 +175,47 @@ class Metodos:
             return respuesta
         except ZeroDivisionError:
             return "|| División por cero, uno de los argumentos no es valido ||"
-             
-             
-
+    
+    def gaussiana_simple(matrix: list, vector_ind: list):
+        vector_soluc: list = []
+        print(matrix)
+        for a in range(len(matrix)):
+            if matrix[a][a] == 0:
+                for b in range(a + 1, len(matrix)):
+                    if matrix[b][a] != 0:
+                        swap: list = matrix[a]
+                        matrix[a] = matrix[b]
+                        matrix[b] = swap
+                        swap2: int = vector_ind[a]
+                        vector_ind[a] = vector_ind[b]
+                        vector_ind[b] = swap2
+                        print(matrix)
+                        break
+                if matrix[a][a] == 0:
+                    return "|| Esta matriz no tiene solución logica. ||"
+            for b in range(a + 1, len(matrix)):
+                if matrix[b][a] == 0:
+                    continue
+                m = matrix[a][a] / matrix[b][a]
+                for c in range(a, len(matrix)):
+                    matrix[b][c] *= m
+                    matrix[b][c] -= matrix[a][c]
+                vector_ind[b] *= m
+                vector_ind[b] -= vector_ind[a]
+        for a in range(len(matrix) - 1, -1, -1):
+            x = matrix[a][a]
+            for b in range(a):
+                if matrix[b][a] == 0:
+                    continue
+                m = matrix[a][a] / matrix[b][a]
+                for c in range(a + 1):
+                    matrix[b][c] *= m
+                    matrix[b][c] -= matrix[a][c]
+                vector_ind[b] *= m
+                vector_ind[b] -= vector_ind[a]
+            vector_soluc.append(vector_ind[a]/x)
         
+        result:str = ""
+        for x in range(0, len(vector_soluc)):
+            result += "X" + str(x) + "= " + str(vector_soluc[-(x + 1)]) + "\n"
+        return result
