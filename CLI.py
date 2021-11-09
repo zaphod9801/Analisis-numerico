@@ -1,4 +1,6 @@
+from wtforms.widgets.core import Input
 from Metodos import *
+from Evaluar import Evaluador
 
 class CLI:
     
@@ -143,19 +145,16 @@ class CLI:
         elif(metodo==8):
             try:
                 print("-"*28+"Eliminación Gaussiana Simple: "+"-"*29)
-                x: int = int(input("Número de filas de la matriz?"))
-                y: int = int(input("Número de columnas de la matriz?"))
+                m: str = input("Matriz de coeficientes? (en formato de python)")
+                matrix: list = Evaluador.CrearMatriz(m)
+                
+                x: int = len(matrix)
+                y: int = len(matrix[0])
                 if(x != y): 
                     resultado = """Weon, la reducción gaussiana simple solo sirve con matrices cuadradas"""
                 else:
-                    matrix: list = []
-                    for a in range(x):
-                        matrix.append([])
-                        for b in range(y):
-                            matrix[a].append(float(input("Valor de la posición [" + str(a) + "," + str(b) + "]")))
-                    terminos_ind: list = []
-                    for a in range(x):
-                        terminos_ind.append(float(input("Valor del termino independiente " + str(a))))
+                    t: str = input("Vector de terminos independientes? (en formato de python)")
+                    terminos_ind: list = Evaluador.CrearMatriz(t)
                     resultado = Metodos.gaussiana_simple(matrix, terminos_ind)
             except ValueError:
                 resultado = """Weon, algo de lo que introdujiste estaba mal."""

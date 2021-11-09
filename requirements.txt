@@ -1,0 +1,5 @@
+dlib==19.20.0
+Flask==1.1.2
+Flask-WTF==0.14.2
+Werkzeug==0.16.0
+WTForms==2.2.1

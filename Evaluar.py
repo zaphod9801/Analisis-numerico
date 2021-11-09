@@ -15,4 +15,16 @@ class Evaluador():
             exit()
                
   
+    def CrearMatriz(matriz: str) -> list:
+        verificador = 0
+        
+        try:
+            Matriz = eval(matriz)
+            verificador = Matriz * 2
+            return Matriz
+        except:
+            print("Matriz no valida")
+            exit()
     
+if __name__=='__main__':
+    print(Evaluador.CrearMatriz("[[4,5,8],[6,1,2],[1,2,3]]"))

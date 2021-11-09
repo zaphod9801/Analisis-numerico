@@ -1,18 +1,22 @@
-from tkinter import *    
-from tkinter import ttk, font
-from Metodos import *
+from flask import Flask, render_template, request, redirect,url_for
+from forms import *
 
-App = Tk()
-App.configure(bg = 'beige')
-App.title('Análisis numérico')
+app = Flask(__name__)
+app.config["TEMPLATES_AUTO_RELOAD"] = True
+app.config['SECRET_KEY'] = 'los cosos'    
+app.static_folder = 'static'
 
-fuente = font.Font(weight='bold')
+@app.route('/',methods=["GET", "POST"])
+def MenuMetodos():
+    form = SelectorMetodos()
+    if form.validate_on_submit():
+        metodo = form.metodo.data
+        print(metodo)
+        next = request.args.get('next', None)
+        if next:
+            return redirect(next)
+        return redirect(url_for('Inicio.html'))
+    return render_template('Inicio.html',form=form)
 
-f = ttk.Label(App, text="función:", font=fuente).pack(fill= BOTH)
-n = ""
-
-t = ttk.Entry(App, textvariable=n, width=30).pack(fill= BOTH)
-
-ttk.Button(App, text='Salir', command=quit).pack(side=BOTTOM)
-
-App.mainloop()
+if __name__ == '__main__':
+    app.run()
