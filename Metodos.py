@@ -192,7 +192,54 @@ class Metodos:
                         print(matrix)
                         break
                 if matrix[a][a] == 0:
-                    return "|| Esta matriz no tiene solución logica. ||"
+                    return "|| Esta matriz no tiene solución logica o tiene infinitas soluciones. ||"
+            for b in range(a + 1, len(matrix)):
+                if matrix[b][a] == 0:
+                    continue
+                m = matrix[a][a] / matrix[b][a]
+                for c in range(a, len(matrix)):
+                    matrix[b][c] *= m
+                    matrix[b][c] -= matrix[a][c]
+                vector_ind[b] *= m
+                vector_ind[b] -= vector_ind[a]
+        for a in range(len(matrix) - 1, -1, -1):
+            x = matrix[a][a]
+            for b in range(a):
+                if matrix[b][a] == 0:
+                    continue
+                m = matrix[a][a] / matrix[b][a]
+                for c in range(a + 1):
+                    matrix[b][c] *= m
+                    matrix[b][c] -= matrix[a][c]
+                vector_ind[b] *= m
+                vector_ind[b] -= vector_ind[a]
+            vector_soluc.append(vector_ind[a]/x)
+        
+        result:str = ""
+        for x in range(0, len(vector_soluc)):
+            result += "X" + str(x) + "= " + str(vector_soluc[-(x + 1)]) + "\n"
+        return result
+    
+    def gaussiana_piv_parcial(matrix: list, vector_ind: list):
+        vector_soluc: list = []
+        print(matrix)
+        for a in range(len(matrix)):
+            piv_supremo: float = abs(matrix[a][a])
+            pos_supremo: int = a
+            for b in range(a + 1, len(matrix)):
+                if abs(matrix[b][a]) > piv_supremo:
+                    piv_supremo = abs(matrix[b][a])
+                    pos_supremo = b
+            if piv_supremo > abs(matrix[a][a]):
+                swap: list = matrix[a]
+                matrix[a] = matrix[pos_supremo]
+                matrix[pos_supremo] = swap
+                swap2: int = vector_ind[a]
+                vector_ind[a] = vector_ind[pos_supremo]
+                vector_ind[pos_supremo] = swap2
+                print(matrix)
+            if piv_supremo == 0:
+                return "|| Esta matriz no tiene solución logica o tiene infinitas soluciones. ||"
             for b in range(a + 1, len(matrix)):
                 if matrix[b][a] == 0:
                     continue
