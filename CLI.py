@@ -174,6 +174,23 @@ class CLI:
                     resultado = Metodos.gaussiana_piv_parcial(matrix, terminos_ind)
             except ValueError:
                 resultado = """Weon, algo de lo que introdujiste estaba mal."""
+        
+        elif(metodo==10):
+            try:
+                print("-"*28+"Eliminación Gaussiana con pivoteo total: "+"-"*29)
+                m: str = input("Matriz de coeficientes? (en formato de python)")
+                matrix: list = Evaluador.CrearMatriz(m)
+
+                x: int = len(matrix)
+                y: int = len(matrix[0])
+                if(x != y):
+                    resultado = """Weon, la reducción gaussiana simple solo sirve con matrices cuadradas"""
+                else:
+                    t: str = input("Vector de terminos independientes? (en formato python)")
+                    terminos_ind: list = Evaluador.CrearMatriz(t)
+                    resultado = Metodos.gaussiana_piv_total(matrix, terminos_ind)
+            except ValueError:
+                resultado = """Weon, algo de lo que introdujiste estaba mal."""
             
         else:
             resultado = "Opción no valida, recuerda que la opción debe ser un número del 1 al 8"
@@ -195,6 +212,7 @@ class CLI:
               - 7: Raices multiples
               - 8: Eliminación Gaussiana Simple
               - 9: Eliminación Gaussiana con pivoteo parcial
+              - 10: Eliminación Gaussiana con pivoteo total
               """)
         try: 
             print(CLI.EjecutarMetodo(int(m)))

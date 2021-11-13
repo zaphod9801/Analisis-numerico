@@ -234,7 +234,7 @@ class Metodos:
                 swap: list = matrix[a]
                 matrix[a] = matrix[pos_supremo]
                 matrix[pos_supremo] = swap
-                swap2: int = vector_ind[a]
+                swap2: float = vector_ind[a]
                 vector_ind[a] = vector_ind[pos_supremo]
                 vector_ind[pos_supremo] = swap2
                 print(matrix)
@@ -265,4 +265,73 @@ class Metodos:
         result:str = ""
         for x in range(0, len(vector_soluc)):
             result += "X" + str(x) + "= " + str(vector_soluc[-(x + 1)]) + "\n"
+        return result
+    
+    def gaussiana_piv_total(matrix: list, vector_ind: list):
+        vector_soluc: list = []
+        print(matrix)
+        column_operations: list = []
+        for a in range(len(matrix)):            
+            piv_supremo: float = abs(matrix[a][a])
+            pos_supremo_x: int = a
+            pos_supremo_y: int = a
+            for b in range(a, len(matrix)):
+                for c in range(a, len(matrix)):
+                    if abs(matrix[b][c]) > piv_supremo:
+                        piv_supremo = abs(matrix[b][c])
+                        pos_supremo_x = b
+                        pos_supremo_y = c
+            if piv_supremo > abs(matrix[a][a]):
+                swap: list = matrix[a]
+                matrix[a] = matrix[pos_supremo_x]
+                matrix[pos_supremo_x] = swap
+                swap2: float = vector_ind[a]
+                vector_ind[a] = vector_ind[pos_supremo_x]
+                vector_ind[pos_supremo_x] = swap2
+                if pos_supremo_y != a:
+                    for b in range(len(matrix)):
+                        swap2 = matrix[b][a]
+                        matrix[b][a] = matrix[b][pos_supremo_y]
+                        matrix[b][pos_supremo_y] = swap2
+                    column_operations.append(pos_supremo_y)
+                    column_operations.append(a)
+                print(matrix)
+            if piv_supremo == 0:
+                return "|| Esta matriz no tiene solución logica o tiene infinitas soluciones. ||"
+            for b in range(a + 1, len(matrix)):
+                if matrix[b][a] == 0:
+                    continue
+                m = matrix[a][a] / matrix[b][a]
+                for c in range(a, len(matrix)):
+                    matrix[b][c] *= m
+                    matrix[b][c] -= matrix[a][c]
+                vector_ind[b] *= m
+                vector_ind[b] -= vector_ind[a]
+        for a in range(len(matrix) - 1, -1, -1):
+            x = matrix[a][a]
+            for b in range(a):
+                if matrix[b][a] == 0:
+                    continue
+                m = matrix[a][a] / matrix[b][a]
+                for c in range(a + 1):
+                    matrix[b][c] *= m
+                    matrix[b][c] -= matrix[a][c]
+                vector_ind[b] *= m
+                vector_ind[b] -= vector_ind[a]
+            vector_soluc.append(vector_ind[a]/x)
+        
+        vector_soluc2: list = []
+        for x in range(0, len(vector_soluc)):
+            vector_soluc2.append(vector_soluc[-(x + 1)])
+        
+        while len(column_operations) != 0:
+            col1: int = column_operations.pop()
+            col2: int = column_operations.pop()
+            swap2: float = vector_soluc2[col1]
+            vector_soluc2[col1] = vector_soluc2[col2]
+            vector_soluc2[col2] = swap2
+
+        result:str = ""
+        for x in range(0, len(vector_soluc2)):
+            result += "X" + str(x) + "= " + str(vector_soluc2[x]) + "\n"
         return result
