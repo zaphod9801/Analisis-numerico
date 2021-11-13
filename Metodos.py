@@ -1,8 +1,10 @@
 from re import A
-from scipy import linalg
-from scipy.linalg.decomp_lu import lu
+from numpy.core import numerictypes
+
+from numpy.linalg.linalg import _multi_dot_matrix_chain_order
 from Evaluar import Evaluador
-from scipy.linalg import lu as lu_method
+from scipy.linalg import lu_factor
+from scipy.linalg import lu_solve
 import numpy as np
 
 class Metodos:
@@ -183,7 +185,6 @@ class Metodos:
     
     def gaussiana_simple(matrix: list, vector_ind: list):
         vector_soluc: list = []
-        print(matrix)
         for a in range(len(matrix)):
             if matrix[a][a] == 0:
                 return "|| Esta matriz no tiene solución usando eliminación gaussiana simple ||"
@@ -214,7 +215,6 @@ class Metodos:
     
     def gaussiana_piv_parcial(matrix: list, vector_ind: list):
         vector_soluc: list = []
-        print(matrix)
         for a in range(len(matrix)):
             piv_supremo: float = abs(matrix[a][a])
             pos_supremo: int = a
@@ -229,7 +229,6 @@ class Metodos:
                 swap2: float = vector_ind[a]
                 vector_ind[a] = vector_ind[pos_supremo]
                 vector_ind[pos_supremo] = swap2
-                print(matrix)
             if piv_supremo == 0:
                 return "|| Esta matriz no tiene solución logica o tiene infinitas soluciones. ||"
             for b in range(a + 1, len(matrix)):
@@ -259,7 +258,6 @@ class Metodos:
     
     def gaussiana_piv_total(matrix: list, vector_ind: list):
         vector_soluc: list = []
-        print(matrix)
         column_operations: list = []
         for a in range(len(matrix)):            
             piv_supremo: float = abs(matrix[a][a])
@@ -285,7 +283,6 @@ class Metodos:
                         matrix[b][pos_supremo_y] = swap2
                     column_operations.append(pos_supremo_y)
                     column_operations.append(a)
-                print(matrix)
             if piv_supremo == 0:
                 return "|| Esta matriz no tiene solución logica o tiene infinitas soluciones. ||"
             for b in range(a + 1, len(matrix)):
@@ -347,14 +344,86 @@ class Metodos:
         l_list = mult_matrix
         result += "L = " + str(l_list) + "\n"
         result += "U = " + str(u_list) + "\n"
-        #A = np.array(matrix)
-        #b = np.array(vector_ind)
-        #p, l, u = lu_method(A)
-        #l_list = l.tolist()
-        #u_list = u.tolist()
-        #result += "L = " + str(l_list) + "\n"
-        #result += "U = " + str(u_list) + "\n"
         z_solve: list = []
+        for a in range(len(l_list)):
+            z: float = l_list[a][a]
+            for b in range(a + 1, len(l_list)):
+                if l_list[b][a] == 0:
+                    continue
+                m = l_list[a][a] / l_list[b][a]
+                for c in range(a, len(l_list)):
+                    l_list[b][c] *= m
+                    l_list[b][c] -= l_list[a][c]
+                vector_ind[b] *= m
+                vector_ind[b] -= vector_ind[a]
+            z_solve.append(vector_ind[a]/z)
+        x_solve: list = []
+        for a in range(len(u_list) - 1, -1, -1):
+            x = u_list[a][a]
+            for b in range(a):
+                if u_list[b][a] == 0:
+                    continue
+                m = u_list[a][a] / u_list[b][a]
+                for c in range(a + 1):
+                    u_list[b][c] *= m
+                    matrix[b][c] -= matrix[a][c]
+                z_solve[b] *= m
+                z_solve[b] -= z_solve[a]
+            x_solve.append(z_solve[a]/x)
+        result += "vector resultados: " + str(np.flip(x_solve).tolist()) + "\n"
+        return result
+    
+    def factorizacionLU_gaussiana_piv_parcial(matrix: list, vector_ind: list):
+        result = ""
+        p_matrix: list = []
+        l_matrix: list = []
+        for a in range(len(matrix)):
+            p_matrix.append([])
+            l_matrix.append([])
+            for b in range(len(matrix)):
+                p_matrix[a].append(1 if a == b else 0)
+                l_matrix[a].append(1 if a == b else 0)
+        mult_matrix: list = []
+        for a in range(len(matrix)):
+            mult_matrix.append([])
+        for a in range(len(matrix)):
+            piv_supremo: float = abs(matrix[a][a])
+            pos_supremo: int = a
+            for b in range(a + 1, len(matrix)):
+                if abs(matrix[b][a]) > piv_supremo:
+                    piv_supremo = abs(matrix[b][a])
+                    pos_supremo = b
+            if piv_supremo > abs(matrix[a][a]):
+                swap: list = matrix[a]
+                matrix[a] = matrix[pos_supremo]
+                matrix[pos_supremo] = swap
+                swap = p_matrix[a]
+                p_matrix[a] = p_matrix[pos_supremo]
+                p_matrix[pos_supremo] = swap
+                swap = l_matrix[a]
+                l_matrix[a] = l_matrix[pos_supremo]
+                l_matrix[pos_supremo] = swap
+            if piv_supremo == 0:
+                return "|| Esta matriz no tiene solución logica o tiene infinitas soluciones. ||"
+            for b in range(a + 1, len(matrix)):
+                if matrix[b][a] == 0:
+                    mult_matrix[b].append(0)
+                    continue
+                m = matrix[b][a] / matrix[a][a]
+                mult_matrix[b].append(m)
+                for c in range(len(matrix)):
+                    matrix[b][c] -= matrix[a][c] * m
+                    l_matrix[b][c] -= l_matrix[a][c] * m
+            mult_matrix[a].append(1)
+            while(len(mult_matrix[a]) < len(matrix)):
+                mult_matrix[a].append(0)
+        u_list = matrix
+        l_list = np.matmul(p_matrix, np.linalg.inv(l_matrix)).tolist()
+        result += "L = " + str(l_list) + "\n"
+        result += "U = " + str(u_list) + "\n"
+        result += "Permutation Matrix: " + str(p_matrix) + "\n"
+        z_solve: list = []
+        vector_ind = np.matmul(p_matrix, vector_ind).tolist()
         for a in range(len(l_list)):
             z: float = l_list[a][a]
             for b in range(a + 1, len(l_list)):
