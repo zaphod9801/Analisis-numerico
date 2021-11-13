@@ -150,7 +150,7 @@ class CLI:
                 x: int = len(matrix)
                 y: int = len(matrix[0])
                 if(x != y): 
-                    resultado = """Weon, la reducción gaussiana simple solo sirve con matrices cuadradas"""
+                    resultado = """Weon, la eliminación gaussiana simple solo sirve con matrices cuadradas"""
                 else:
                     t: str = input("Vector de terminos independientes? (en formato de python)")
                     terminos_ind: list = Evaluador.CrearMatriz(t)
@@ -167,7 +167,7 @@ class CLI:
                 x: int = len(matrix)
                 y: int = len(matrix[0])
                 if(x != y):
-                    resultado = """Weon, la reducción gaussiana simple solo sirve con matrices cuadradas"""
+                    resultado = """Weon, la eliminación gaussiana simple solo sirve con matrices cuadradas"""
                 else:
                     t: str = input("Vector de terminos independientes? (en formato python)")
                     terminos_ind: list = Evaluador.CrearMatriz(t)
@@ -184,11 +184,28 @@ class CLI:
                 x: int = len(matrix)
                 y: int = len(matrix[0])
                 if(x != y):
-                    resultado = """Weon, la reducción gaussiana simple solo sirve con matrices cuadradas"""
+                    resultado = """Weon, la elimineación gaussiana simple solo sirve con matrices cuadradas"""
                 else:
                     t: str = input("Vector de terminos independientes? (en formato python)")
                     terminos_ind: list = Evaluador.CrearMatriz(t)
                     resultado = Metodos.gaussiana_piv_total(matrix, terminos_ind)
+            except ValueError:
+                resultado = """Weon, algo de lo que introdujiste estaba mal."""
+        
+        elif(metodo==11):
+            try:
+                print("-"*28+"Factorización LU con eliminación gaussiana simple: "+"-"*29)
+                m: str = input("Matriz de coeficientes? (en formato de python)")
+                matrix: list = Evaluador.CrearMatriz(m)
+
+                x: int = len(matrix)
+                y: int = len(matrix[0])
+                if(x != y):
+                    resultado = """Weon, la eliminación gaussiana simple solo sirve con matrices cuadradas"""
+                else:
+                    t: str = input("Vector de terminos independientes? (en formato python)")
+                    terminos_ind: list = Evaluador.CrearMatriz(t)
+                    resultado = Metodos.factorizacionLU_gaussiana_simple(matrix, terminos_ind)
             except ValueError:
                 resultado = """Weon, algo de lo que introdujiste estaba mal."""
             
@@ -213,6 +230,7 @@ class CLI:
               - 8: Eliminación Gaussiana Simple
               - 9: Eliminación Gaussiana con pivoteo parcial
               - 10: Eliminación Gaussiana con pivoteo total
+              - 11: Factorización LU con gaussiana simple
               """)
         try: 
             print(CLI.EjecutarMetodo(int(m)))

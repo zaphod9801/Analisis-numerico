@@ -1,4 +1,9 @@
+from re import A
+from scipy import linalg
+from scipy.linalg.decomp_lu import lu
 from Evaluar import Evaluador
+from scipy.linalg import lu as lu_method
+import numpy as np
 
 class Metodos:
     
@@ -181,27 +186,14 @@ class Metodos:
         print(matrix)
         for a in range(len(matrix)):
             if matrix[a][a] == 0:
-                for b in range(a + 1, len(matrix)):
-                    if matrix[b][a] != 0:
-                        swap: list = matrix[a]
-                        matrix[a] = matrix[b]
-                        matrix[b] = swap
-                        swap2: int = vector_ind[a]
-                        vector_ind[a] = vector_ind[b]
-                        vector_ind[b] = swap2
-                        print(matrix)
-                        break
-                if matrix[a][a] == 0:
-                    return "|| Esta matriz no tiene solución logica o tiene infinitas soluciones. ||"
+                return "|| Esta matriz no tiene solución usando eliminación gaussiana simple ||"
             for b in range(a + 1, len(matrix)):
                 if matrix[b][a] == 0:
                     continue
-                m = matrix[a][a] / matrix[b][a]
+                m = matrix[b][a] / matrix[a][a]
                 for c in range(a, len(matrix)):
-                    matrix[b][c] *= m
-                    matrix[b][c] -= matrix[a][c]
-                vector_ind[b] *= m
-                vector_ind[b] -= vector_ind[a]
+                    matrix[b][c] -= matrix[a][c] * m
+                vector_ind[b] -= vector_ind[a] * m
         for a in range(len(matrix) - 1, -1, -1):
             x = matrix[a][a]
             for b in range(a):
@@ -243,12 +235,10 @@ class Metodos:
             for b in range(a + 1, len(matrix)):
                 if matrix[b][a] == 0:
                     continue
-                m = matrix[a][a] / matrix[b][a]
+                m = matrix[b][a] / matrix[a][a]
                 for c in range(a, len(matrix)):
-                    matrix[b][c] *= m
-                    matrix[b][c] -= matrix[a][c]
-                vector_ind[b] *= m
-                vector_ind[b] -= vector_ind[a]
+                    matrix[b][c] -= matrix[a][c] * m
+                vector_ind[b] -= vector_ind[a] * m
         for a in range(len(matrix) - 1, -1, -1):
             x = matrix[a][a]
             for b in range(a):
@@ -301,12 +291,10 @@ class Metodos:
             for b in range(a + 1, len(matrix)):
                 if matrix[b][a] == 0:
                     continue
-                m = matrix[a][a] / matrix[b][a]
+                m = matrix[b][a] / matrix[a][a]
                 for c in range(a, len(matrix)):
-                    matrix[b][c] *= m
-                    matrix[b][c] -= matrix[a][c]
-                vector_ind[b] *= m
-                vector_ind[b] -= vector_ind[a]
+                    matrix[b][c] -= matrix[a][c] * m
+                vector_ind[b] -= vector_ind[a] * m
         for a in range(len(matrix) - 1, -1, -1):
             x = matrix[a][a]
             for b in range(a):
@@ -334,4 +322,63 @@ class Metodos:
         result:str = ""
         for x in range(0, len(vector_soluc2)):
             result += "X" + str(x) + "= " + str(vector_soluc2[x]) + "\n"
+        return result
+    
+    def factorizacionLU_gaussiana_simple(matrix: list, vector_ind: list):
+        result: str = ""
+        mult_matrix: list = []
+        for a in range(len(matrix)):
+            mult_matrix.append([])
+        for a in range(len(matrix)):
+            if matrix[a][a] == 0:
+                return "|| Esta matriz no tiene solución usando eliminación gaussiana simple ||"
+            for b in range(a + 1, len(matrix)):
+                if matrix[b][a] == 0:
+                    mult_matrix[b].append(0)
+                    continue
+                m = matrix[b][a] / matrix[a][a]
+                mult_matrix[b].append(m)
+                for c in range(a, len(matrix)):
+                    matrix[b][c] -= matrix[a][c] * m
+            mult_matrix[a].append(1)
+            while(len(mult_matrix[a]) < len(matrix)):
+                mult_matrix[a].append(0)
+        u_list = matrix
+        l_list = mult_matrix
+        result += "L = " + str(l_list) + "\n"
+        result += "U = " + str(u_list) + "\n"
+        #A = np.array(matrix)
+        #b = np.array(vector_ind)
+        #p, l, u = lu_method(A)
+        #l_list = l.tolist()
+        #u_list = u.tolist()
+        #result += "L = " + str(l_list) + "\n"
+        #result += "U = " + str(u_list) + "\n"
+        z_solve: list = []
+        for a in range(len(l_list)):
+            z: float = l_list[a][a]
+            for b in range(a + 1, len(l_list)):
+                if l_list[b][a] == 0:
+                    continue
+                m = l_list[a][a] / l_list[b][a]
+                for c in range(a, len(l_list)):
+                    l_list[b][c] *= m
+                    l_list[b][c] -= l_list[a][c]
+                vector_ind[b] *= m
+                vector_ind[b] -= vector_ind[a]
+            z_solve.append(vector_ind[a]/z)
+        x_solve: list = []
+        for a in range(len(u_list) - 1, -1, -1):
+            x = u_list[a][a]
+            for b in range(a):
+                if u_list[b][a] == 0:
+                    continue
+                m = u_list[a][a] / u_list[b][a]
+                for c in range(a + 1):
+                    u_list[b][c] *= m
+                    matrix[b][c] -= matrix[a][c]
+                z_solve[b] *= m
+                z_solve[b] -= z_solve[a]
+            x_solve.append(z_solve[a]/x)
+        result += "vector resultados: " + str(np.flip(x_solve).tolist()) + "\n"
         return result
