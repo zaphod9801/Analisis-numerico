@@ -154,7 +154,10 @@ class CLI:
                 else:
                     t: str = input("Vector de terminos independientes? (en formato de python)")
                     terminos_ind: list = Evaluador.CrearMatriz(t)
-                    resultado = Metodos.gaussiana_simple(matrix, terminos_ind)
+                    if len(terminos_ind) != x:
+                        resultado = """Es imposible resolver esta matriz con el vector de terminos independientes dado"""
+                    else:
+                        resultado = Metodos.gaussiana_simple(matrix, terminos_ind)
             except ValueError:
                 resultado = """Weon, algo de lo que introdujiste estaba mal."""
         
@@ -171,7 +174,10 @@ class CLI:
                 else:
                     t: str = input("Vector de terminos independientes? (en formato python)")
                     terminos_ind: list = Evaluador.CrearMatriz(t)
-                    resultado = Metodos.gaussiana_piv_parcial(matrix, terminos_ind)
+                    if len(terminos_ind) != x:
+                        resultado = """Es imposible resolver esta matriz con el vector de terminos independientes dado"""
+                    else:
+                        resultado = Metodos.gaussiana_piv_parcial(matrix, terminos_ind)
             except ValueError:
                 resultado = """Weon, algo de lo que introdujiste estaba mal."""
         
@@ -188,7 +194,10 @@ class CLI:
                 else:
                     t: str = input("Vector de terminos independientes? (en formato python)")
                     terminos_ind: list = Evaluador.CrearMatriz(t)
-                    resultado = Metodos.gaussiana_piv_total(matrix, terminos_ind)
+                    if len(terminos_ind) != x:
+                        resultado = """Es imposible resolver esta matriz con el vector de terminos independientes dado"""
+                    else:
+                        resultado = Metodos.gaussiana_piv_total(matrix, terminos_ind)
             except ValueError:
                 resultado = """Weon, algo de lo que introdujiste estaba mal."""
         
@@ -205,7 +214,10 @@ class CLI:
                 else:
                     t: str = input("Vector de terminos independientes? (en formato python)")
                     terminos_ind: list = Evaluador.CrearMatriz(t)
-                    resultado = Metodos.factorizacionLU_gaussiana_simple(matrix, terminos_ind)
+                    if len(terminos_ind) != x:
+                        resultado = """Es imposible resolver esta matriz con el vector de terminos independientes dado"""
+                    else:
+                        resultado = Metodos.factorizacionLU_gaussiana_simple(matrix, terminos_ind)
             except ValueError:
                 resultado = """Weon, algo de lo que introdujiste estaba mal."""
         
@@ -222,7 +234,10 @@ class CLI:
                 else:
                     t: str = input("Vector de terminos independientes? (en formato python)")
                     terminos_ind: list = Evaluador.CrearMatriz(t)
-                    resultado = Metodos.factorizacionLU_gaussiana_piv_parcial(matrix, terminos_ind)
+                    if len(terminos_ind) != x:
+                        resultado = """Es imposible resolver esta matriz con el vector de terminos independientes dado"""
+                    else:
+                        resultado = Metodos.factorizacionLU_gaussiana_piv_parcial(matrix, terminos_ind)
             except ValueError:
                 resultado = """Weon, algo de lo que introdujiste estaba mal."""
         
@@ -239,7 +254,10 @@ class CLI:
                 else:
                     t: str = input("Vector de terminos independientes? (en formato python)")
                     terminos_ind: list = Evaluador.CrearMatriz(t)
-                    resultado = Metodos.crout_decomposition(matrix, terminos_ind)
+                    if len(terminos_ind) != x:
+                        resultado = """Es imposible resolver esta matriz con el vector de terminos independientes dado"""
+                    else:
+                        resultado = Metodos.crout_decomposition(matrix, terminos_ind)
             except ValueError:
                 resultado = """Weon, algo de lo que introdujiste estaba mal."""
         
@@ -256,7 +274,10 @@ class CLI:
                 else:
                     t: str = input("Vector de terminos independientes? (en formato python)")
                     terminos_ind: list = Evaluador.CrearMatriz(t)
-                    resultado = Metodos.doolittle_decomposition(matrix, terminos_ind)
+                    if len(terminos_ind) != x:
+                        resultado = """Es imposible resolver esta matriz con el vector de terminos independientes dado"""
+                    else:
+                        resultado = Metodos.doolittle_decomposition(matrix, terminos_ind)
             except ValueError:
                 resultado = """Weon, algo de lo que introdujiste estaba mal."""
 
@@ -273,7 +294,37 @@ class CLI:
                 else:
                     t: str = input("Vector de terminos independientes? (en formato python)")
                     terminos_ind: list = Evaluador.CrearMatriz(t)
-                    resultado = Metodos.cholesky_decomposition(matrix, terminos_ind)
+                    if len(terminos_ind) != x:
+                        resultado = """Es imposible resolver esta matriz con el vector de terminos independientes dado"""
+                    else:
+                        resultado = Metodos.cholesky_decomposition(matrix, terminos_ind)
+            except ValueError:
+                resultado = """Weon, algo de lo que introdujiste estaba mal."""
+        
+        elif(metodo==16):
+            try:
+                print("-"*28+"Metodo iterativo (JACOBI): "+"-"*29)
+                m: str = input("Matriz de coeficientes? (en formato de python)")
+                matrix: list = Evaluador.CrearMatriz(m)
+
+                x: int = len(matrix)
+                y: int = len(matrix[0])
+                if(x != y):
+                    resultado = """Weon, el algoritmo de cholesky solo sirve con matrices cuadradas"""
+                else:
+                    t: str = input("Vector de terminos independientes? (en formato python)")
+                    terminos_ind: list = Evaluador.CrearMatriz(t)
+                    if len(terminos_ind) != x:
+                        resultado = """Es imposible resolver esta matriz con el vector de terminos independientes dado"""
+                    else:
+                        aprox: str = input("Vector de aproximaciones iniciales? (en formato python)")
+                        vector_aprox: list = Evaluador.CrearMatriz(aprox)
+                        if len(vector_aprox) != x:
+                            resultado = """Las dimensiones del vector de aproximaciones no corresponde a las esperadas"""
+                        else:
+                            tol: float = float(input("Tolerancia minima de error?"))
+                            iters: int = int(input("Numero maximo de iteraciones?"))
+                            resultado = Metodos.jacobi_iterative(matrix, terminos_ind, vector_aprox, tol, iters)
             except ValueError:
                 resultado = """Weon, algo de lo que introdujiste estaba mal."""
             
@@ -302,6 +353,7 @@ class CLI:
               - 13: Factorización directa (Crout)
               - 14: Factorización directa (Doolittle)
               - 15: Factorización directa (Cholesky)
+              - 16: Metodo iterativo (Jacobi)
               """)
         try: 
             print(CLI.EjecutarMetodo(int(m)))
