@@ -619,37 +619,9 @@ class Metodos:
             x_solve.append(z_solve[a]/x)
         result += "vector resultados: " + str(np.flip(x_solve).tolist()) + "\n"
         return result
-    
+
     def jacobi_iterative(matrix: list, vector_ind: list, vector_aprox: list, tol: float, iter_max: int):
-        result: str  = ""
-        cur_iter : int = 0
-        error: float = 0
-        Evaluador.matriz_dominante_diagonalmente(matrix, vector_ind)
-        for x in range(len(matrix)):
-            if matrix[x][x] == 0:
-                return "|| Division entre cero :P esta matriz probablemente no sea invertible ||"
-        for x in range(iter_max):
-            new_aprox: list = []
-            error = 0
-            error_denom: float = 0
-            for a in range(len(vector_aprox)):
-                sum: float = vector_ind[a]
-                for b in range(len(matrix)):
-                    if a != b:
-                        sum -= vector_aprox[b] * matrix[a][b]
-                new_aprox.append(sum / matrix[a][a])
-            for a in range(len(vector_aprox)):
-                error += (new_aprox[a] - vector_aprox[a])**2
-                error_denom += new_aprox[a]**2
-            error = sqrt(error) / sqrt(error_denom)
-            vector_aprox = new_aprox
-            if(error < tol):
-                cur_iter = x + 1
-                break
-            if x == iter_max - 1:
-                result += "Se alcanzo el número maximo de iteraciones\n"
-                cur_iter = x + 1
-        result += "Vector solución alcanzado: " + str(vector_aprox) + '\n'
-        result += "Número de iteraciones completadas: " + str(cur_iter) + '\n'
-        result += "Error en la ultima iteracion: " + str(error) + '\n'
-        return result
+        return Evaluador.jacobi_plus_gauss_seidel(matrix, vector_ind, vector_aprox, tol, iter_max, 0)
+    
+    def gauss_seidel_iterative(matrix: list, vector_ind: list, vector_aprox: list, tol: float, iter_max: int):
+        return Evaluador.jacobi_plus_gauss_seidel(matrix, vector_ind, vector_aprox, tol, iter_max, 1)
