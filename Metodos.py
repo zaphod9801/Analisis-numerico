@@ -621,7 +621,10 @@ class Metodos:
         return result
 
     def jacobi_iterative(matrix: list, vector_ind: list, vector_aprox: list, tol: float, iter_max: int):
-        return Evaluador.jacobi_plus_gauss_seidel(matrix, vector_ind, vector_aprox, tol, iter_max, 0)
+        return Evaluador.jacobi_plus_gauss_seidel(matrix, vector_ind, vector_aprox, tol, iter_max, 0, 0)
     
     def gauss_seidel_iterative(matrix: list, vector_ind: list, vector_aprox: list, tol: float, iter_max: int):
-        return Evaluador.jacobi_plus_gauss_seidel(matrix, vector_ind, vector_aprox, tol, iter_max, 1)
+        return Evaluador.jacobi_plus_gauss_seidel(matrix, vector_ind, vector_aprox, tol, iter_max, 1, 0)
+    
+    def SOR_iterative(matrix: list, vector_ind: list, vector_aprox: list, tol: float, iter_max: int, w: float):
+        return Evaluador.jacobi_plus_gauss_seidel(matrix, vector_ind, vector_aprox, tol, iter_max, 2, w)
