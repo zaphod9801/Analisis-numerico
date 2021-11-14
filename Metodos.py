@@ -1,7 +1,6 @@
 from re import A
 from numpy.core import numerictypes
 from numpy.linalg.linalg import _multi_dot_matrix_chain_order
-from scipy.linalg import cholesky
 from Evaluar import Evaluador
 from math import sqrt
 import numpy as np
@@ -577,11 +576,15 @@ class Metodos:
                 sum: float = 0
                 for c in range(a):
                     sum += l_matrix[a][c] * u_matrix[c][b]
+                if l_matrix[a][a] == 0:
+                    return " || Division entre 0 :P || "
                 u_matrix[a][b] = (matrix[a][b] - sum) / l_matrix[a][a]
             for b in range(a + 1, len(matrix)):
                 sum: float = 0
                 for c in range(a):
                     sum += l_matrix[b][c] * u_matrix[c][a]
+                if u_matrix[a][a] == 0:
+                    return " || Division entre 0 :P || "
                 l_matrix[b][a] = (matrix[b][a] - sum) / u_matrix[a][a]
         result += "L = " + str(l_matrix) + "\n"
         result += "U = " + str(u_matrix) + '\n'
