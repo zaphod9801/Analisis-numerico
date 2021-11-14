@@ -1,7 +1,9 @@
 from re import A
 from numpy.core import numerictypes
 from numpy.linalg.linalg import _multi_dot_matrix_chain_order
+from scipy.linalg import cholesky
 from Evaluar import Evaluador
+from math import sqrt
 import numpy as np
 
 class Metodos:
@@ -522,6 +524,65 @@ class Metodos:
                     if u_matrix[b][b] == 0:
                         return "|| Division entre 0 :P ||"
                     l_matrix[a + 1][b] = (matrix[a + 1][b] - sum) / u_matrix[b][b]
+        result += "L = " + str(l_matrix) + "\n"
+        result += "U = " + str(u_matrix) + '\n'
+        u_list: list = u_matrix
+        l_list: list = l_matrix
+        z_solve: list = []
+        for a in range(len(l_list)):
+            z: float = l_list[a][a]
+            for b in range(a + 1, len(l_list)):
+                if l_list[b][a] == 0:
+                    continue
+                m = l_list[a][a] / l_list[b][a]
+                for c in range(a, len(l_list)):
+                    l_list[b][c] *= m
+                    l_list[b][c] -= l_list[a][c]
+                vector_ind[b] *= m
+                vector_ind[b] -= vector_ind[a]
+            z_solve.append(vector_ind[a]/z)
+        x_solve: list = []
+        for a in range(len(u_list) - 1, -1, -1):
+            x = u_list[a][a]
+            for b in range(a):
+                if u_list[b][a] == 0:
+                    continue
+                m = u_list[a][a] / u_list[b][a]
+                for c in range(a + 1):
+                    u_list[b][c] *= m
+                    matrix[b][c] -= matrix[a][c]
+                z_solve[b] *= m
+                z_solve[b] -= z_solve[a]
+            x_solve.append(z_solve[a]/x)
+        result += "vector resultados: " + str(np.flip(x_solve).tolist()) + "\n"
+        return result
+    
+    def cholesky_decomposition(matrix: list, vector_ind: list):
+        result: str = ""
+        l_matrix: list = []
+        u_matrix: list = []
+        for a in range(len(matrix)):
+            l_matrix.append([])
+            u_matrix.append([])
+            for b in range(len(matrix)):
+                l_matrix[a].append(0)
+                u_matrix[a].append(0)
+        for a in range(len(matrix)):
+            sum: float = 0
+            for b in range(a):
+                sum += l_matrix[a][b] * u_matrix[b][a]
+            u_matrix[a][a] = sqrt(matrix[a][a] - sum)
+            l_matrix[a][a] = u_matrix[a][a]
+            for b in range(a + 1, len(matrix)):
+                sum: float = 0
+                for c in range(a):
+                    sum += l_matrix[a][c] * u_matrix[c][b]
+                u_matrix[a][b] = (matrix[a][b] - sum) / l_matrix[a][a]
+            for b in range(a + 1, len(matrix)):
+                sum: float = 0
+                for c in range(a):
+                    sum += l_matrix[b][c] * u_matrix[c][a]
+                l_matrix[b][a] = (matrix[b][a] - sum) / u_matrix[a][a]
         result += "L = " + str(l_matrix) + "\n"
         result += "U = " + str(u_matrix) + '\n'
         u_list: list = u_matrix

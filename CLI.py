@@ -259,10 +259,26 @@ class CLI:
                     resultado = Metodos.doolittle_decomposition(matrix, terminos_ind)
             except ValueError:
                 resultado = """Weon, algo de lo que introdujiste estaba mal."""
+
+        elif(metodo==15):
+            try:
+                print("-"*28+"Factorización directa (CHOLESKY): "+"-"*29)
+                m: str = input("Matriz de coeficientes? (en formato de python)")
+                matrix: list = Evaluador.CrearMatriz(m)
+
+                x: int = len(matrix)
+                y: int = len(matrix[0])
+                if(x != y):
+                    resultado = """Weon, el algoritmo de cholesky solo sirve con matrices cuadradas"""
+                else:
+                    t: str = input("Vector de terminos independientes? (en formato python)")
+                    terminos_ind: list = Evaluador.CrearMatriz(t)
+                    resultado = Metodos.cholesky_decomposition(matrix, terminos_ind)
+            except ValueError:
+                resultado = """Weon, algo de lo que introdujiste estaba mal."""
             
         else:
             resultado = "Opción no valida, recuerda que la opción debe ser un número del 1 al 8"
-            
         
         return resultado
             
@@ -285,6 +301,7 @@ class CLI:
               - 12: Factorización LU con pivoteo parcial
               - 13: Factorización directa (Crout)
               - 14: Factorización directa (Doolittle)
+              - 15: Factorización directa (Cholesky)
               """)
         try: 
             print(CLI.EjecutarMetodo(int(m)))
