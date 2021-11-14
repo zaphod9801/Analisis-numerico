@@ -242,6 +242,23 @@ class CLI:
                     resultado = Metodos.crout_decomposition(matrix, terminos_ind)
             except ValueError:
                 resultado = """Weon, algo de lo que introdujiste estaba mal."""
+        
+        elif(metodo==14):
+            try:
+                print("-"*28+"Factorización directa (DOOLITTLE): "+"-"*29)
+                m: str = input("Matriz de coeficientes? (en formato de python)")
+                matrix: list = Evaluador.CrearMatriz(m)
+
+                x: int = len(matrix)
+                y: int = len(matrix[0])
+                if(x != y):
+                    resultado = """Weon, el algoritmo de doolittle solo sirve con matrices cuadradas"""
+                else:
+                    t: str = input("Vector de terminos independientes? (en formato python)")
+                    terminos_ind: list = Evaluador.CrearMatriz(t)
+                    resultado = Metodos.doolittle_decomposition(matrix, terminos_ind)
+            except ValueError:
+                resultado = """Weon, algo de lo que introdujiste estaba mal."""
             
         else:
             resultado = "Opción no valida, recuerda que la opción debe ser un número del 1 al 8"
@@ -267,6 +284,7 @@ class CLI:
               - 11: Factorización LU con gaussiana simple
               - 12: Factorización LU con pivoteo parcial
               - 13: Factorización directa (Crout)
+              - 14: Factorización directa (Doolittle)
               """)
         try: 
             print(CLI.EjecutarMetodo(int(m)))
