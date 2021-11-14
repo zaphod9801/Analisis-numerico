@@ -1,10 +1,7 @@
 from re import A
 from numpy.core import numerictypes
-
 from numpy.linalg.linalg import _multi_dot_matrix_chain_order
 from Evaluar import Evaluador
-from scipy.linalg import lu_factor
-from scipy.linalg import lu_solve
 import numpy as np
 
 class Metodos:
@@ -383,9 +380,6 @@ class Metodos:
             for b in range(len(matrix)):
                 p_matrix[a].append(1 if a == b else 0)
                 l_matrix[a].append(1 if a == b else 0)
-        mult_matrix: list = []
-        for a in range(len(matrix)):
-            mult_matrix.append([])
         for a in range(len(matrix)):
             piv_supremo: float = abs(matrix[a][a])
             pos_supremo: int = a
@@ -407,23 +401,75 @@ class Metodos:
                 return "|| Esta matriz no tiene solución logica o tiene infinitas soluciones. ||"
             for b in range(a + 1, len(matrix)):
                 if matrix[b][a] == 0:
-                    mult_matrix[b].append(0)
                     continue
                 m = matrix[b][a] / matrix[a][a]
-                mult_matrix[b].append(m)
                 for c in range(len(matrix)):
                     matrix[b][c] -= matrix[a][c] * m
                     l_matrix[b][c] -= l_matrix[a][c] * m
-            mult_matrix[a].append(1)
-            while(len(mult_matrix[a]) < len(matrix)):
-                mult_matrix[a].append(0)
         u_list = matrix
         l_list = np.matmul(p_matrix, np.linalg.inv(l_matrix)).tolist()
         result += "L = " + str(l_list) + "\n"
         result += "U = " + str(u_list) + "\n"
         result += "Permutation Matrix: " + str(p_matrix) + "\n"
-        z_solve: list = []
         vector_ind = np.matmul(p_matrix, vector_ind).tolist()
+        z_solve: list = []
+        for a in range(len(l_list)):
+            z: float = l_list[a][a]
+            for b in range(a + 1, len(l_list)):
+                if l_list[b][a] == 0:
+                    continue
+                m = l_list[a][a] / l_list[b][a]
+                for c in range(a, len(l_list)):
+                    l_list[b][c] *= m
+                    l_list[b][c] -= l_list[a][c]
+                vector_ind[b] *= m
+                vector_ind[b] -= vector_ind[a]
+            z_solve.append(vector_ind[a]/z)
+        x_solve: list = []
+        for a in range(len(u_list) - 1, -1, -1):
+            x = u_list[a][a]
+            for b in range(a):
+                if u_list[b][a] == 0:
+                    continue
+                m = u_list[a][a] / u_list[b][a]
+                for c in range(a + 1):
+                    u_list[b][c] *= m
+                    matrix[b][c] -= matrix[a][c]
+                z_solve[b] *= m
+                z_solve[b] -= z_solve[a]
+            x_solve.append(z_solve[a]/x)
+        result += "vector resultados: " + str(np.flip(x_solve).tolist()) + "\n"
+        return result
+    
+    def crout_decomposition(matrix: list, vector_ind: list):
+        result: str = ""
+        l_matrix: list = []
+        u_matrix: list = []
+        for a in range(len(matrix)):
+            l_matrix.append([])
+            u_matrix.append([])
+            for b in range(len(matrix)):
+                u_matrix[a].append(1 if a == b else 0)
+                l_matrix[a].append(0)
+        for a in range(len(matrix)):
+            for b in range(a, len(matrix)):
+                sum: float = 0
+                for c in range(a):
+                    sum += l_matrix[b][c] * u_matrix[c][a]
+                l_matrix[b][a] = (matrix[b][a] - sum)
+            if a + 1 < len(matrix):
+                for b in range(a + 1):
+                    sum: float = 0
+                    for c in range(a):
+                        sum += l_matrix[b][c] * u_matrix[c][a + 1]
+                    if l_matrix[b][b] == 0:
+                        return "|| Division entre 0 :P ||"
+                    u_matrix[b][a + 1] = (matrix[b][a + 1] - sum) / l_matrix[b][b]
+        result += "L = " + str(l_matrix) + "\n"
+        result += "U = " + str(u_matrix) + '\n'
+        u_list: list = u_matrix
+        l_list: list = l_matrix
+        z_solve: list = []
         for a in range(len(l_list)):
             z: float = l_list[a][a]
             for b in range(a + 1, len(l_list)):
