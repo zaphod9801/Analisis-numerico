@@ -343,33 +343,7 @@ class Metodos:
         l_list = mult_matrix
         result += "L = " + str(l_list) + "\n"
         result += "U = " + str(u_list) + "\n"
-        z_solve: list = []
-        for a in range(len(l_list)):
-            z: float = l_list[a][a]
-            for b in range(a + 1, len(l_list)):
-                if l_list[b][a] == 0:
-                    continue
-                m = l_list[a][a] / l_list[b][a]
-                for c in range(a, len(l_list)):
-                    l_list[b][c] *= m
-                    l_list[b][c] -= l_list[a][c]
-                vector_ind[b] *= m
-                vector_ind[b] -= vector_ind[a]
-            z_solve.append(vector_ind[a]/z)
-        x_solve: list = []
-        for a in range(len(u_list) - 1, -1, -1):
-            x = u_list[a][a]
-            for b in range(a):
-                if u_list[b][a] == 0:
-                    continue
-                m = u_list[a][a] / u_list[b][a]
-                for c in range(a + 1):
-                    u_list[b][c] *= m
-                    matrix[b][c] -= matrix[a][c]
-                z_solve[b] *= m
-                z_solve[b] -= z_solve[a]
-            x_solve.append(z_solve[a]/x)
-        result += "vector resultados: " + str(np.flip(x_solve).tolist()) + "\n"
+        result += Evaluador.LUx_equals_b(l_list, u_list, vector_ind)
         return result
     
     def factorizacionLU_gaussiana_piv_parcial(matrix: list, vector_ind: list):
@@ -414,33 +388,7 @@ class Metodos:
         result += "U = " + str(u_list) + "\n"
         result += "Permutation Matrix: " + str(p_matrix) + "\n"
         vector_ind = np.matmul(p_matrix, vector_ind).tolist()
-        z_solve: list = []
-        for a in range(len(l_list)):
-            z: float = l_list[a][a]
-            for b in range(a + 1, len(l_list)):
-                if l_list[b][a] == 0:
-                    continue
-                m = l_list[a][a] / l_list[b][a]
-                for c in range(a, len(l_list)):
-                    l_list[b][c] *= m
-                    l_list[b][c] -= l_list[a][c]
-                vector_ind[b] *= m
-                vector_ind[b] -= vector_ind[a]
-            z_solve.append(vector_ind[a]/z)
-        x_solve: list = []
-        for a in range(len(u_list) - 1, -1, -1):
-            x = u_list[a][a]
-            for b in range(a):
-                if u_list[b][a] == 0:
-                    continue
-                m = u_list[a][a] / u_list[b][a]
-                for c in range(a + 1):
-                    u_list[b][c] *= m
-                    matrix[b][c] -= matrix[a][c]
-                z_solve[b] *= m
-                z_solve[b] -= z_solve[a]
-            x_solve.append(z_solve[a]/x)
-        result += "vector resultados: " + str(np.flip(x_solve).tolist()) + "\n"
+        result += Evaluador.LUx_equals_b(l_list, u_list, vector_ind)
         return result
     
     def crout_decomposition(matrix: list, vector_ind: list):
@@ -469,35 +417,7 @@ class Metodos:
                     u_matrix[b][a + 1] = (matrix[b][a + 1] - sum) / l_matrix[b][b]
         result += "L = " + str(l_matrix) + "\n"
         result += "U = " + str(u_matrix) + '\n'
-        u_list: list = u_matrix
-        l_list: list = l_matrix
-        z_solve: list = []
-        for a in range(len(l_list)):
-            z: float = l_list[a][a]
-            for b in range(a + 1, len(l_list)):
-                if l_list[b][a] == 0:
-                    continue
-                m = l_list[a][a] / l_list[b][a]
-                for c in range(a, len(l_list)):
-                    l_list[b][c] *= m
-                    l_list[b][c] -= l_list[a][c]
-                vector_ind[b] *= m
-                vector_ind[b] -= vector_ind[a]
-            z_solve.append(vector_ind[a]/z)
-        x_solve: list = []
-        for a in range(len(u_list) - 1, -1, -1):
-            x = u_list[a][a]
-            for b in range(a):
-                if u_list[b][a] == 0:
-                    continue
-                m = u_list[a][a] / u_list[b][a]
-                for c in range(a + 1):
-                    u_list[b][c] *= m
-                    matrix[b][c] -= matrix[a][c]
-                z_solve[b] *= m
-                z_solve[b] -= z_solve[a]
-            x_solve.append(z_solve[a]/x)
-        result += "vector resultados: " + str(np.flip(x_solve).tolist()) + "\n"
+        result += Evaluador.LUx_equals_b(l_matrix, u_matrix, vector_ind)
         return result
     
     def doolittle_decomposition(matrix: list, vector_ind : list):
@@ -526,35 +446,7 @@ class Metodos:
                     l_matrix[a + 1][b] = (matrix[a + 1][b] - sum) / u_matrix[b][b]
         result += "L = " + str(l_matrix) + "\n"
         result += "U = " + str(u_matrix) + '\n'
-        u_list: list = u_matrix
-        l_list: list = l_matrix
-        z_solve: list = []
-        for a in range(len(l_list)):
-            z: float = l_list[a][a]
-            for b in range(a + 1, len(l_list)):
-                if l_list[b][a] == 0:
-                    continue
-                m = l_list[a][a] / l_list[b][a]
-                for c in range(a, len(l_list)):
-                    l_list[b][c] *= m
-                    l_list[b][c] -= l_list[a][c]
-                vector_ind[b] *= m
-                vector_ind[b] -= vector_ind[a]
-            z_solve.append(vector_ind[a]/z)
-        x_solve: list = []
-        for a in range(len(u_list) - 1, -1, -1):
-            x = u_list[a][a]
-            for b in range(a):
-                if u_list[b][a] == 0:
-                    continue
-                m = u_list[a][a] / u_list[b][a]
-                for c in range(a + 1):
-                    u_list[b][c] *= m
-                    matrix[b][c] -= matrix[a][c]
-                z_solve[b] *= m
-                z_solve[b] -= z_solve[a]
-            x_solve.append(z_solve[a]/x)
-        result += "vector resultados: " + str(np.flip(x_solve).tolist()) + "\n"
+        result += Evaluador.LUx_equals_b(l_matrix, u_matrix, vector_ind)
         return result
     
     def cholesky_decomposition(matrix: list, vector_ind: list):
@@ -571,6 +463,8 @@ class Metodos:
             sum: float = 0
             for b in range(a):
                 sum += l_matrix[a][b] * u_matrix[b][a]
+            if matrix[a][a] - sum < 0:
+                return "|| Raiz cuadrada de un número negativo, este programa no soporta números imaginarios :P ||"
             u_matrix[a][a] = sqrt(matrix[a][a] - sum)
             l_matrix[a][a] = u_matrix[a][a]
             for b in range(a + 1, len(matrix)):
@@ -589,35 +483,7 @@ class Metodos:
                 l_matrix[b][a] = (matrix[b][a] - sum) / u_matrix[a][a]
         result += "L = " + str(l_matrix) + "\n"
         result += "U = " + str(u_matrix) + '\n'
-        u_list: list = u_matrix
-        l_list: list = l_matrix
-        z_solve: list = []
-        for a in range(len(l_list)):
-            z: float = l_list[a][a]
-            for b in range(a + 1, len(l_list)):
-                if l_list[b][a] == 0:
-                    continue
-                m = l_list[a][a] / l_list[b][a]
-                for c in range(a, len(l_list)):
-                    l_list[b][c] *= m
-                    l_list[b][c] -= l_list[a][c]
-                vector_ind[b] *= m
-                vector_ind[b] -= vector_ind[a]
-            z_solve.append(vector_ind[a]/z)
-        x_solve: list = []
-        for a in range(len(u_list) - 1, -1, -1):
-            x = u_list[a][a]
-            for b in range(a):
-                if u_list[b][a] == 0:
-                    continue
-                m = u_list[a][a] / u_list[b][a]
-                for c in range(a + 1):
-                    u_list[b][c] *= m
-                    matrix[b][c] -= matrix[a][c]
-                z_solve[b] *= m
-                z_solve[b] -= z_solve[a]
-            x_solve.append(z_solve[a]/x)
-        result += "vector resultados: " + str(np.flip(x_solve).tolist()) + "\n"
+        result += Evaluador.LUx_equals_b(l_matrix, u_matrix, vector_ind)
         return result
 
     def jacobi_iterative(matrix: list, vector_ind: list, vector_aprox: list, tol: float, iter_max: int):
