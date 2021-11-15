@@ -3,6 +3,7 @@ from re import A
 import re
 from numpy.core import numerictypes
 from numpy.linalg.linalg import _multi_dot_matrix_chain_order
+from numpy.typing import _256Bit
 from Evaluar import Evaluador
 from math import prod, sqrt
 from term import term
@@ -534,18 +535,45 @@ class Metodos:
             for y in range(x + 1, len(abscisas)):
                 if n == abscisas[y]:
                     return "|| Es imposible interpolar estos puntos con este metodo, hay puntos repetidos en las abscisas ||"
-        for x in range(len(abscisas)):
-            for y in range(x + 1, len(abscisas)):
-                if abscisas[y] < abscisas[x]:
-                    swap: float = abscisas[x]
-                    abscisas[x] = abscisas[y]
-                    abscisas[y] = swap
-                    swap = ordenadas[x]
-                    ordenadas[x] = ordenadas[y]
-                    ordenadas[y] = swap
+        Evaluador.abscisa_sort(abscisas, ordenadas)
         for x in range(len(abscisas) - 1):
             matrix: list = [[abscisas[x], 1], [abscisas[x + 1], 1]]
             vector_ind: list = [ordenadas[x], ordenadas[x + 1]]
             form_result: list = Evaluador.gaussiana_piv_total_aux(matrix, vector_ind, 1)
-            result += "     (" + str(form_result[0]) + " * x) + (" + str(form_result[1]) + ") | " + str(abscisas[x]) + " <= x <= " + str(abscisas[x + 1]) + '\n'
+            result += "     (" + str(form_result[0]) + " * X) + (" + str(form_result[1]) + ") | " + str(abscisas[x]) + " <= x <= " + str(abscisas[x + 1]) + '\n'
+        return result
+    
+    def quadratic_spline(abscisas: list, ordenadas: list):
+        result: str = "f(x) =\n"
+        for x in range(len(abscisas)):
+            n: float = abscisas[x]
+            for y in range(x + 1, len(abscisas)):
+                if n == abscisas[y]:
+                    return "|| Es imposible interpolar estos puntos con este metodo, hay puntos repetidos en las abscisas ||"
+        Evaluador.abscisa_sort(abscisas, ordenadas)
+        matrix: list = []
+        vector_ind: list = []
+        for x in range((len(abscisas) - 1) * 3):
+            matrix.append([])
+            for y in range((len(abscisas) - 1) * 3):
+                matrix[x].append(0)
+            vector_ind.append(0)
+        for x in range(len(abscisas) - 1):
+            matrix[2*x][3*x] = abscisas[x]**2
+            matrix[2*x][3*x + 1] = abscisas[x]
+            matrix[2*x][3*x + 2] = 1
+            matrix[2*x + 1][3*x] = abscisas[x+1]**2
+            matrix[2*x + 1][3*x + 1] = abscisas[x + 1]
+            matrix[2*x + 1][3*x + 2] = 1
+            vector_ind[2*x] = ordenadas[x]
+            vector_ind[2*x + 1] = ordenadas[x + 1]
+        for x in range(len(abscisas) - 2):
+            matrix[2*len(abscisas) + x - 2][3*x] = abscisas[x + 1]*2
+            matrix[2*len(abscisas) + x - 2][3*x + 1] = 1
+            matrix[2*len(abscisas) + x - 2][3*x + 3] = -abscisas[x + 1]*2
+            matrix[2*len(abscisas) + x - 2][3*x + 4] = - 1
+        matrix[-1][0] = 2
+        form_result: list = Evaluador.gaussiana_piv_total_aux(matrix, vector_ind, 1)
+        for x in range(len(abscisas) - 1):
+            result += "     (" + str(form_result[x*3]) + " * X^2) + (" + str(form_result[x*3 + 1]) + " * X) + (" + str(form_result[x*3 + 2]) + ") | " + str(abscisas[x]) + " <= x <= " + str(abscisas[x + 1]) + '\n'
         return result

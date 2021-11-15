@@ -183,5 +183,16 @@ class Evaluador():
         result += "Error en la ultima iteracion: " + str(error) + '\n'
         return result
 
+    def abscisa_sort(abscisas: list, ordenadas: list):
+        for x in range(len(abscisas)):
+            for y in range(x + 1, len(abscisas)):
+                if abscisas[y] < abscisas[x]:
+                    swap: float = abscisas[x]
+                    abscisas[x] = abscisas[y]
+                    abscisas[y] = swap
+                    swap = ordenadas[x]
+                    ordenadas[x] = ordenadas[y]
+                    ordenadas[y] = swap
+
 if __name__=='__main__':
     print(Evaluador.CrearMatriz("[[4,5,8],[6,1,2],[1,2,3]]"))

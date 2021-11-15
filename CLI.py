@@ -433,6 +433,18 @@ class CLI:
                     resultado = Metodos.lineal_spline(abscisas, ordenadas)
             except ValueError:
                 resultado = """Weon, algo de lo que introdujiste estaba mal."""
+        
+        elif(metodo==23):
+            try:
+                print("-"*28+"Trazadores cuadraticos: "+"-"*29)
+                abscisas: list = Evaluador.CrearMatriz(input("Vector de abscisas? [En formato python]"))
+                ordenadas: list = Evaluador.CrearMatriz(input("Vector de ordenadas? [En formato python]"))
+                if len(abscisas) != len(ordenadas):
+                    resultado = "El número de abscisas dadas no concuerda con el número de ordenadas"
+                else:
+                    resultado = Metodos.quadratic_spline(abscisas, ordenadas)
+            except ValueError:
+                resultado = """Weon, algo de lo que introdujiste estaba mal."""
             
         else:
             resultado = "Opción no valida, recuerda que la opción debe ser un número del 1 al 8"
@@ -466,6 +478,7 @@ class CLI:
               - 20: Interpolación de Newton con Diferencias Divididas
               - 21: Interpolación de Lagrange
               - 22: Trazadores lineales
+              - 23: Trazadores cuadraticos
               """)
         try: 
             print(CLI.EjecutarMetodo(int(m)))
