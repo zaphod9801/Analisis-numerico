@@ -256,69 +256,7 @@ class Metodos:
         return result
     
     def gaussiana_piv_total(matrix: list, vector_ind: list):
-        vector_soluc: list = []
-        column_operations: list = []
-        for a in range(len(matrix)):            
-            piv_supremo: float = abs(matrix[a][a])
-            pos_supremo_x: int = a
-            pos_supremo_y: int = a
-            for b in range(a, len(matrix)):
-                for c in range(a, len(matrix)):
-                    if abs(matrix[b][c]) > piv_supremo:
-                        piv_supremo = abs(matrix[b][c])
-                        pos_supremo_x = b
-                        pos_supremo_y = c
-            if piv_supremo > abs(matrix[a][a]):
-                swap: list = matrix[a]
-                matrix[a] = matrix[pos_supremo_x]
-                matrix[pos_supremo_x] = swap
-                swap2: float = vector_ind[a]
-                vector_ind[a] = vector_ind[pos_supremo_x]
-                vector_ind[pos_supremo_x] = swap2
-                if pos_supremo_y != a:
-                    for b in range(len(matrix)):
-                        swap2 = matrix[b][a]
-                        matrix[b][a] = matrix[b][pos_supremo_y]
-                        matrix[b][pos_supremo_y] = swap2
-                    column_operations.append(pos_supremo_y)
-                    column_operations.append(a)
-            if piv_supremo == 0:
-                return "|| Esta matriz no tiene solución logica o tiene infinitas soluciones. ||"
-            for b in range(a + 1, len(matrix)):
-                if matrix[b][a] == 0:
-                    continue
-                m = matrix[b][a] / matrix[a][a]
-                for c in range(a, len(matrix)):
-                    matrix[b][c] -= matrix[a][c] * m
-                vector_ind[b] -= vector_ind[a] * m
-        for a in range(len(matrix) - 1, -1, -1):
-            x = matrix[a][a]
-            for b in range(a):
-                if matrix[b][a] == 0:
-                    continue
-                m = matrix[a][a] / matrix[b][a]
-                for c in range(a + 1):
-                    matrix[b][c] *= m
-                    matrix[b][c] -= matrix[a][c]
-                vector_ind[b] *= m
-                vector_ind[b] -= vector_ind[a]
-            vector_soluc.append(vector_ind[a]/x)
-        
-        vector_soluc2: list = []
-        for x in range(0, len(vector_soluc)):
-            vector_soluc2.append(vector_soluc[-(x + 1)])
-        
-        while len(column_operations) != 0:
-            col1: int = column_operations.pop()
-            col2: int = column_operations.pop()
-            swap2: float = vector_soluc2[col1]
-            vector_soluc2[col1] = vector_soluc2[col2]
-            vector_soluc2[col2] = swap2
-
-        result:str = ""
-        for x in range(0, len(vector_soluc2)):
-            result += "X" + str(x) + "= " + str(vector_soluc2[x]) + "\n"
-        return result
+        return Evaluador.gaussiana_piv_total_aux(matrix, vector_ind, 0)
     
     def factorizacionLU_gaussiana_simple(matrix: list, vector_ind: list):
         result: str = ""
@@ -494,3 +432,22 @@ class Metodos:
     
     def SOR_iterative(matrix: list, vector_ind: list, vector_aprox: list, tol: float, iter_max: int, w: float):
         return Evaluador.jacobi_plus_gauss_seidel(matrix, vector_ind, vector_aprox, tol, iter_max, 2, w)
+    
+    def vandermonde_interpolation(abscisas: list, ordenadas: list):
+        result: str = ""
+        for x in range(len(abscisas)):
+            n: float = abscisas[x]
+            for y in range(x + 1, len(abscisas)):
+                if n == abscisas[y]:
+                    return "|| Es imposible interpolar estos puntos con este metodo, hay puntos repetidos en las abscisas ||"
+        vandermonde: list = []
+        for x in range(len(abscisas)):
+            vandermonde.append([])
+            for y in range(len(abscisas)):
+                vandermonde[x].append(abscisas[x]**y)
+        vect_resultados: list = Evaluador.gaussiana_piv_total_aux(vandermonde, ordenadas, 1)
+        for x in range(len(vect_resultados) - 1, -1, -1):
+            result += "(" + str(vect_resultados[x]) + "* X^" + str(x) + ") "
+            if x != 0:
+                result += "+ "
+        return result

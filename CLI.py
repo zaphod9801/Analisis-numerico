@@ -385,6 +385,18 @@ class CLI:
                                 resultado = Metodos.SOR_iterative(matrix, terminos_ind, vector_aprox, tol, iters, w)
             except ValueError:
                 resultado = """Weon, algo de lo que introdujiste estaba mal."""
+        
+        elif(metodo==19):
+            try:
+                print("-"*28+"Interpolación de VANDERMONDE: "+"-"*29)
+                abscisas: list = Evaluador.CrearMatriz(input("Vector de abscisas? [En formato python]"))
+                ordenadas: list = Evaluador.CrearMatriz(input("Vector de ordenadas? [En formato python]"))
+                if len(abscisas) != len(ordenadas):
+                    resultado = "El número de abscisas dadas no concuerda con el número de ordenadas"
+                else:
+                    resultado = Metodos.vandermonde_interpolation(abscisas, ordenadas)
+            except ValueError:
+                resultado = """Weon, algo de lo que introdujiste estaba mal."""
             
         else:
             resultado = "Opción no valida, recuerda que la opción debe ser un número del 1 al 8"
@@ -414,6 +426,7 @@ class CLI:
               - 16: Metodo iterativo (Jacobi)
               - 17: Metodo iterativo (Gauss-seidel)
               - 18: Metodo iterativo (S.O.R)
+              - 19: Interpolación usando matriz de Vandermonde
               """)
         try: 
             print(CLI.EjecutarMetodo(int(m)))
