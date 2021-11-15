@@ -526,3 +526,26 @@ class Metodos:
             result += str(vector_soluc[x])
             result += '\n' if x == 0 else ' + '
         return result
+    
+    def lineal_spline(abscisas: list, ordenadas: list):
+        result: str = "f(x) =\n"
+        for x in range(len(abscisas)):
+            n: float = abscisas[x]
+            for y in range(x + 1, len(abscisas)):
+                if n == abscisas[y]:
+                    return "|| Es imposible interpolar estos puntos con este metodo, hay puntos repetidos en las abscisas ||"
+        for x in range(len(abscisas)):
+            for y in range(x + 1, len(abscisas)):
+                if abscisas[y] < abscisas[x]:
+                    swap: float = abscisas[x]
+                    abscisas[x] = abscisas[y]
+                    abscisas[y] = swap
+                    swap = ordenadas[x]
+                    ordenadas[x] = ordenadas[y]
+                    ordenadas[y] = swap
+        for x in range(len(abscisas) - 1):
+            matrix: list = [[abscisas[x], 1], [abscisas[x + 1], 1]]
+            vector_ind: list = [ordenadas[x], ordenadas[x + 1]]
+            form_result: list = Evaluador.gaussiana_piv_total_aux(matrix, vector_ind, 1)
+            result += "     (" + str(form_result[0]) + " * x) + (" + str(form_result[1]) + ") | " + str(abscisas[x]) + " <= x <= " + str(abscisas[x + 1]) + '\n'
+        return result
