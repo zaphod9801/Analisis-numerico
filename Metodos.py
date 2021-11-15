@@ -1,3 +1,4 @@
+import abc
 from re import A
 import re
 from numpy.core import numerictypes
@@ -450,4 +451,24 @@ class Metodos:
             result += "(" + str(vect_resultados[x]) + " * X^" + str(x) + ") "
             if x != 0:
                 result += "+ "
+        return result
+    
+    def newton_diferencias_divididas(abscisas: list, ordenadas: list):
+        result: str = ""
+        for x in range(len(abscisas)):
+            n: float = abscisas[x]
+            for y in range(x + 1, len(abscisas)):
+                if n == abscisas[y]:
+                    return "|| Es imposible interpolar estos puntos con este metodo, hay puntos repetidos en las abscisas ||"
+        dif_divididas: list = []
+        for x in range(len(abscisas)):
+            dif_divididas.append([])
+            dif_divididas[x].append(ordenadas[x])
+        for x in range(1, len(abscisas)):
+            for y in range(x, len(abscisas)):
+                dif_divididas[y].append((dif_divididas[y][x - 1] - dif_divididas[y - 1][x - 1]) / (abscisas[y] - abscisas[y - x]))
+        b_vector: list = []
+        for x in range(len(abscisas)):
+            b_vector.append(dif_divididas[x][x])
+        result += "Coeficientes del polinomio interpolante de Newton: " + str(b_vector) + '\n'
         return result
