@@ -4,7 +4,8 @@ import re
 from numpy.core import numerictypes
 from numpy.linalg.linalg import _multi_dot_matrix_chain_order
 from Evaluar import Evaluador
-from math import sqrt
+from math import prod, sqrt
+from term import term
 import numpy as np
 
 class Metodos:
@@ -471,4 +472,57 @@ class Metodos:
         for x in range(len(abscisas)):
             b_vector.append(dif_divididas[x][x])
         result += "Coeficientes del polinomio interpolante de Newton: " + str(b_vector) + '\n'
+        return result
+    
+    def Lagrange_interpolation(abscisas: list, ordenadas: list):
+        result: str = ""
+        for x in range(len(abscisas)):
+            n: float = abscisas[x]
+            for y in range(x + 1, len(abscisas)):
+                if n == abscisas[y]:
+                    return "|| Es imposible interpolar estos puntos con este metodo, hay puntos repetidos en las abscisas ||"
+        lagrange_polys: list = []
+        x_arg: term = term(1, 1)
+        n_term_1: term
+        n_term_2: term
+        for x in range(len(abscisas)):
+            lagrange_polys.append([])
+            prod_num: list = [[term(1, 0)]]
+            for y in range(len(abscisas)):
+                if x == y:
+                    continue
+                prod_num.append([])
+                for a in range(len(prod_num) - 1):
+                    n_term_1 = prod_num[a][0] * x_arg
+                    n_term_2 = prod_num[a][0] * term(- abscisas[y], 0)
+                    prod_num[n_term_1.term_exp].append(n_term_1)
+                    prod_num[a][0] = n_term_2
+                for a in range(len(prod_num)):
+                    if len(prod_num[a]) > 1:
+                        prod_num[a][0] = prod_num[a][0] + prod_num[a][1]
+                        prod_num[a].pop()
+            lagrange_polys[x] = prod_num
+        for x in range(len(abscisas)):
+            prod_den: float = 1
+            for y in range(len(abscisas)):
+                if x == y:
+                    continue
+                prod_den *= abscisas[x] - abscisas[y]
+            for y in range(len(lagrange_polys[x])):
+                lagrange_polys[x][y][0] *= term(1/prod_den, 0)
+        for x in range(len(lagrange_polys)):
+            result += "L" + str(x) + " = "
+            for y in range(len(lagrange_polys[x]) - 1, -1, -1):
+                result += str(lagrange_polys[x][y][0])
+                result += '\n' if y == 0 else ' + '
+        vector_soluc: list = []
+        for x in range(len(abscisas)):
+            vector_soluc.append(term(0, x))
+        for x in range(len(ordenadas)):
+            for y in range(len(lagrange_polys[x])):
+                vector_soluc[y] += lagrange_polys[x][y][0] * term(ordenadas[x], 0)
+        result += 'P(x) = '
+        for x in range(len(vector_soluc) - 1, -1, -1):
+            result += str(vector_soluc[x])
+            result += '\n' if x == 0 else ' + '
         return result

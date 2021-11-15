@@ -409,6 +409,18 @@ class CLI:
                     resultado = Metodos.newton_diferencias_divididas(abscisas, ordenadas)
             except ValueError:
                 resultado = """Weon, algo de lo que introdujiste estaba mal."""
+        
+        elif(metodo==21):
+            try:
+                print("-"*28+"Interpolación de LAGRANGE: "+"-"*29)
+                abscisas: list = Evaluador.CrearMatriz(input("Vector de abscisas? [En formato python]"))
+                ordenadas: list = Evaluador.CrearMatriz(input("Vector de ordenadas? [En formato python]"))
+                if len(abscisas) != len(ordenadas):
+                    resultado = "El número de abscisas dadas no concuerda con el número de ordenadas"
+                else:
+                    resultado = Metodos.Lagrange_interpolation(abscisas, ordenadas)
+            except ValueError:
+                resultado = """Weon, algo de lo que introdujiste estaba mal."""
             
         else:
             resultado = "Opción no valida, recuerda que la opción debe ser un número del 1 al 8"
@@ -440,6 +452,7 @@ class CLI:
               - 18: Metodo iterativo (S.O.R)
               - 19: Interpolación usando matriz de Vandermonde
               - 20: Interpolación de Newton con Diferencias Divididas
+              - 21: Interpolación de Lagrange
               """)
         try: 
             print(CLI.EjecutarMetodo(int(m)))
