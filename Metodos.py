@@ -447,7 +447,7 @@ class Metodos:
                 vandermonde[x].append(abscisas[x]**y)
         vect_resultados: list = Evaluador.gaussiana_piv_total_aux(vandermonde, ordenadas, 1)
         for x in range(len(vect_resultados) - 1, -1, -1):
-            result += "(" + str(vect_resultados[x]) + "* X^" + str(x) + ") "
+            result += "(" + str(vect_resultados[x]) + " * X^" + str(x) + ") "
             if x != 0:
                 result += "+ "
         return result
