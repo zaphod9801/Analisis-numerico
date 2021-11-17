@@ -170,7 +170,7 @@ class CLI:
                 x: int = len(matrix)
                 y: int = len(matrix[0])
                 if(x != y):
-                    resultado = """Weon, la eliminación gaussiana simple solo sirve con matrices cuadradas"""
+                    resultado = """Weon, la eliminación gaussiana solo sirve con matrices cuadradas"""
                 else:
                     t: str = input("Vector de terminos independientes? (en formato python)")
                     terminos_ind: list = Evaluador.CrearMatriz(t)
@@ -190,7 +190,7 @@ class CLI:
                 x: int = len(matrix)
                 y: int = len(matrix[0])
                 if(x != y):
-                    resultado = """Weon, la elimineación gaussiana simple solo sirve con matrices cuadradas"""
+                    resultado = """Weon, la elimineación gaussiana solo sirve con matrices cuadradas"""
                 else:
                     t: str = input("Vector de terminos independientes? (en formato python)")
                     terminos_ind: list = Evaluador.CrearMatriz(t)
@@ -210,7 +210,7 @@ class CLI:
                 x: int = len(matrix)
                 y: int = len(matrix[0])
                 if(x != y):
-                    resultado = """Weon, la eliminación gaussiana simple solo sirve con matrices cuadradas"""
+                    resultado = """Weon, la factorización LU solo sirve con matrices cuadradas"""
                 else:
                     t: str = input("Vector de terminos independientes? (en formato python)")
                     terminos_ind: list = Evaluador.CrearMatriz(t)
@@ -230,7 +230,7 @@ class CLI:
                 x: int = len(matrix)
                 y: int = len(matrix[0])
                 if(x != y):
-                    resultado = """Weon, la eliminación gaussiana simple solo sirve con matrices cuadradas"""
+                    resultado = """Weon, la factorización LU solo sirve con matrices cuadradas"""
                 else:
                     t: str = input("Vector de terminos independientes? (en formato python)")
                     terminos_ind: list = Evaluador.CrearMatriz(t)
@@ -304,13 +304,13 @@ class CLI:
         elif(metodo==16):
             try:
                 print("-"*28+"Metodo iterativo (JACOBI): "+"-"*29)
-                m: str = input("Matriz de coeficientes? (en formato de python)")
+                m: str = input("Matriz de coeficientes? (en formato de python). \n Asegurese que sea estrictamente dominante diagonalmente para asegurar convergencia: ")
                 matrix: list = Evaluador.CrearMatriz(m)
 
                 x: int = len(matrix)
                 y: int = len(matrix[0])
                 if(x != y):
-                    resultado = """Weon, el algoritmo de cholesky solo sirve con matrices cuadradas"""
+                    resultado = """Weon, el algoritmo de Jacobi solo sirve con matrices cuadradas"""
                 else:
                     t: str = input("Vector de terminos independientes? (en formato python)")
                     terminos_ind: list = Evaluador.CrearMatriz(t)
@@ -331,13 +331,13 @@ class CLI:
         elif(metodo==17):
             try:
                 print("-"*28+"Metodo iterativo (GAUSS-SEIDEL): "+"-"*29)
-                m: str = input("Matriz de coeficientes? (en formato de python)")
+                m: str = input("Matriz de coeficientes? (en formato de python). \n Asegurese que sea estrictamente dominante diagonalmente para asegurar convergencia: ")
                 matrix: list = Evaluador.CrearMatriz(m)
 
                 x: int = len(matrix)
                 y: int = len(matrix[0])
                 if(x != y):
-                    resultado = """Weon, el algoritmo de cholesky solo sirve con matrices cuadradas"""
+                    resultado = """Weon, el algoritmo de Gauss-Seidel solo sirve con matrices cuadradas"""
                 else:
                     t: str = input("Vector de terminos independientes? (en formato python)")
                     terminos_ind: list = Evaluador.CrearMatriz(t)
@@ -358,13 +358,13 @@ class CLI:
         elif(metodo==18):
             try:
                 print("-"*28+"Metodo iterativo (S.O.R): "+"-"*29)
-                m: str = input("Matriz de coeficientes? (en formato de python)")
+                m: str = input("Matriz de coeficientes? (en formato de python). \n Asegurese que sea estrictamente dominante diagonalmente para asegurar convergencia: ")
                 matrix: list = Evaluador.CrearMatriz(m)
 
                 x: int = len(matrix)
                 y: int = len(matrix[0])
                 if(x != y):
-                    resultado = """Weon, el algoritmo de cholesky solo sirve con matrices cuadradas"""
+                    resultado = """Weon, el algoritmo de S.O.R solo sirve con matrices cuadradas"""
                 else:
                     t: str = input("Vector de terminos independientes? (en formato python)")
                     terminos_ind: list = Evaluador.CrearMatriz(t)
@@ -447,7 +447,7 @@ class CLI:
                 resultado = """Weon, algo de lo que introdujiste estaba mal."""
             
         else:
-            resultado = "Opción no valida, recuerda que la opción debe ser un número del 1 al 8"
+            resultado = "Opción no valida, recuerda que la opción debe ser un número del 1 al 23"
         
         return resultado
             

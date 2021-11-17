@@ -1,4 +1,5 @@
 from django import forms
+from django.utils.safestring import mark_safe
 
 
 metodos = ((1,"Busqueda Incremental"),(2,"Biseccion"),(3,"Regla Falsa"),(4,"Punto fijo"),
@@ -75,7 +76,7 @@ class MatrizVectorF(forms.Form):
 
     
 class MatrizVectorAproximacionF(forms.Form):
-    matriz: str = forms.CharField(label='Matriz de coeficientes (en formato de python): ' )
+    matriz: str = forms.CharField(label=mark_safe('Matriz de coeficientes (en formato de python). Asegurese que sea <br/> estrictamente dominante diagonalmente para asegurar convergencia:'))
     vector: str = forms.CharField(label='Vector de terminos independientes (en formato de python): ' )
     vectorAprox: str = forms.CharField(label='Vector de aproximaciones iniciales (en formato de python): ' )
     t: float = forms.FloatField(label='Tolerancia: ' )
@@ -83,7 +84,7 @@ class MatrizVectorAproximacionF(forms.Form):
     
     
 class SORF(forms.Form):
-    matriz: str = forms.CharField(label='Matriz de coeficientes (en formato de python): ' )
+    matriz: str = forms.CharField(label=mark_safe('Matriz de coeficientes (en formato de python). Asegurese que sea <br/> estrictamente dominante diagonalmente para asegurar convergencia:'))
     vector: str = forms.CharField(label='Vector de terminos independientes (en formato de python): ' )
     vectorAprox: str = forms.CharField(label='Vector de aproximaciones iniciales (en formato de python): ' )
     relajacion: float = forms.FloatField(label='Factor de relajación: ')
