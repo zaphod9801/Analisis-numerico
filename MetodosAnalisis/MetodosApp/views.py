@@ -231,46 +231,6 @@ def PuntoFijoGUI(request):
     return render(request,"metodo.html",contexto)
 
 
-def ReglaFalseGUI(request):
-    if request.method == 'POST':
-        formulario = ReglaFalsaF(request.POST)
-        
-        if formulario.is_valid():
-            info = formulario.cleaned_data
-            try:
-                f: str = info['funcion']
-                a: float = info['a']
-                b: float = info['b'] 
-                t: float = info['t'] 
-                n: int = info['n']
-                
-                resultado = Metodos.ReglaFalsa(str(f),float(a),float(b),float(t),int(n))
-            
-            except:
-                resultado = """Un dato introducido no fue valido, recordar que: 
-                - La función es un string, escribela normal usando formato de Python sin comillas
-                - El inicio del intervalo es un entero o un decimal
-                - El final del intervalo es un entero o un decimal
-                - La toleracia es un entero o un decimal
-                - Las iteraciones maximas son un entero"""
-                
-            contexto = {
-                "resultado":resultado,
-                "titulo":"Regla Falsa"
-            } 
-            
-            return render(request,"resultado.html",contexto)
-            
-    else:
-        formulario = ReglaFalsaF()
-            
-    contexto = {
-        "formulario":formulario,
-        "titulo":"Regla Falsa"
-    }        
-                     
-    return render(request,"metodo.html",contexto)
-
 def NewtonGUI(request):
     if request.method == 'POST':
         formulario = NewtonF(request.POST)
@@ -492,7 +452,7 @@ def GaussianaPivoteoTotalGUI(request):
                     if len(terminos_ind) != x:
                         resultado = """Es imposible resolver esta matriz con el vector de terminos independientes dado"""
                     else:
-                        resultado = Metodos.gaussiana_piv_parcial(matrix, terminos_ind)
+                        resultado = Metodos.gaussiana_piv_total(matrix, terminos_ind)
             except:
                 resultado = """Weon, algo de lo que introdujiste estaba mal."""
                 
