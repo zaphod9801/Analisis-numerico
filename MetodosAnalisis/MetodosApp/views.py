@@ -990,7 +990,7 @@ def trazaCuadraGUI(request):
             
     contexto = {
         "formulario":formulario,
-        "titulo":"Trazzadores Cuadráticos"
+        "titulo":"Trazadores Cuadráticos"
     }        
                      
     return render(request,"metodo.html",contexto)
