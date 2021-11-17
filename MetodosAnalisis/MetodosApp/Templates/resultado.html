@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+    {% load static %}
+    {% block  title %}
+        {{titulo}}
+    {% endblock   %}
+    {%block content%}
+        <strong>
+        <br>
+        <p>
+        El resultado del algoritmo {{titulo}} fue: 
+        </p>
+        <br>
+        <p> {{resultado}} </p>
+        </strong>
+    {% endblock %}
