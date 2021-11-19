@@ -1,4 +1,4 @@
-# Análisis-numerico
+# Análisis-númerico
 
 El objetivo de esto es una representación de cada metodo visto durante la clase de Análisis Númerico
 así como la entrega al proyecto de la susodicha materia.
