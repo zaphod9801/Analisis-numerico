@@ -1,5 +1,4 @@
 dlib==19.20.0
-Flask==1.1.2
-Flask-WTF==0.14.2
-Werkzeug==0.16.0
-WTForms==2.2.1
+Django == 3.2.9
+numpy == 1.18.4
+
